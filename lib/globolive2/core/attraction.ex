@@ -23,6 +23,7 @@ defmodule Globolive2.Core.Attraction do
   """
   @spec id(t) :: String.t()
   def id(attraction) do
-    # TODO
+    %__MODULE__{name: name} = attraction
+    name
   end
 end

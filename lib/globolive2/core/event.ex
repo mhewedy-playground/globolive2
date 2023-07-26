@@ -1,11 +1,15 @@
 defmodule Globolive2.Core.Event do
   @moduledoc false
 
+  alias Globolive2.Core.{Attraction, Visitor}
+
   @type t :: %__MODULE__{
           name: String.t(),
           location: String.t(),
           start: DateTime.t(),
-          finish: DateTime.t()
+          finish: DateTime.t(),
+          attractions: [Attraction.t()],
+          attraction_count: non_neg_integer
         }
 
   @enforce_keys [:name, :location, :start, :finish]
@@ -26,7 +30,8 @@ defmodule Globolive2.Core.Event do
   """
   @spec id(t) :: String.t()
   def id(event) do
-    # TODO
+    %__MODULE__{name: name} = event
+    name
   end
 
   @doc """
@@ -34,7 +39,13 @@ defmodule Globolive2.Core.Event do
   """
   @spec add_attraction(t, Enum.t()) :: t
   def add_attraction(event, attraction_attributes) do
-    # TODO
+    attraction = Attraction.new(attraction_attributes)
+
+    %__MODULE__{
+      event
+      | attractions: [attraction | event.attractions],
+        attraction_count: event.attraction_count + 1
+    }
   end
 
   @doc """
@@ -42,7 +53,8 @@ defmodule Globolive2.Core.Event do
   """
   @spec get_attraction(t, String.t()) :: Attraction.t() | nil
   def get_attraction(event, attraction_name) do
-    # TODO
+    %__MODULE__{attractions: attractions} = event
+    Enum.find(attractions, fn attraction -> Attraction.id(attraction) == attraction_name end)
   end
 
   @doc """
@@ -50,6 +62,12 @@ defmodule Globolive2.Core.Event do
   """
   @spec remove_attraction(t, Attraction.t()) :: t
   def remove_attraction(event, attraction) do
-    # TODO
+    attractions = Enum.reject(event.attractions, &(attraction == &1))
+
+    %__MODULE__{
+      event
+      | attractions: attractions,
+        attraction_count: length(attractions)
+    }
   end
 end
