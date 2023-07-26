@@ -32,7 +32,7 @@ defmodule Globolive2.Core.Visitor do
   """
   @spec arrived?(t) :: boolean
   def arrived?(visitor) do
-    # TODO
+    not is_nil(visitor.arrived_at)
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule Globolive2.Core.Visitor do
   """
   @spec get_event(t) :: Event.t()
   def get_event(visitor) do
-    # TODO
+    visitor.event
   end
 
   @doc """
@@ -48,7 +48,8 @@ defmodule Globolive2.Core.Visitor do
   """
   @spec id(t) :: {String.t(), String.t()}
   def id(visitor) do
-    # TODO
+    %__MODULE__{email: visitor_email, event: event} = visitor
+    {visitor_email, Event.id(event)}
   end
 
   @doc """
@@ -56,7 +57,10 @@ defmodule Globolive2.Core.Visitor do
   """
   @spec mark_arrived(t, DateTime.t()) :: t
   def mark_arrived(visitor, timestamp) do
-    # TODO
+    %__MODULE__{
+      visitor
+      | arrived_at: timestamp
+    }
   end
 
   @doc """
@@ -64,7 +68,13 @@ defmodule Globolive2.Core.Visitor do
   """
   @spec mark_checkin(t, Attraction.t()) :: t
   def mark_checkin(visitor, attraction) do
-    # TODO
+    %__MODULE__{event: event, visited: visited} = visitor
+
+    %__MODULE__{
+      visitor
+      | event: Event.remove_attraction(event, attraction),
+        visited: MapSet.put(visited, attraction)
+    }
   end
 
   @doc """
@@ -72,6 +82,7 @@ defmodule Globolive2.Core.Visitor do
   """
   @spec visited?(t, Attraction.t()) :: boolean
   def visited?(visitor, attraction) do
-    # TODO
+    %__MODULE__{visited: visited} = visitor
+    MapSet.member?(visited, attraction)
   end
 end
