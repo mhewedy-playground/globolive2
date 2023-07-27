@@ -6,6 +6,7 @@ defmodule Globolive2.MixProject do
       app: :globolive2,
       version: "0.1.0",
       elixir: "~> 1.12",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
@@ -18,6 +19,9 @@ defmodule Globolive2.MixProject do
       mod: {Globolive2.Application, []}
     ]
   end
+
+  defp elixirc_paths(:dev), do: ["lib"]
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
