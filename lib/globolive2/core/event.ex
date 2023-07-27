@@ -70,4 +70,13 @@ defmodule Globolive2.Core.Event do
         attraction_count: length(attractions)
     }
   end
+
+  defimpl Globolive2.Core.Schedulable do
+    def duration(%Globolive2.Core.Event{
+          start: start,
+          finish: finish
+        }) do
+      DateTime.diff(finish, start, :second)
+    end
+  end
 end

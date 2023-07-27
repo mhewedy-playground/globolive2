@@ -26,4 +26,13 @@ defmodule Globolive2.Core.Attraction do
     %__MODULE__{name: name} = attraction
     name
   end
+
+  defimpl Globolive2.Core.Schedulable do
+    def duration(%Globolive2.Core.Attraction{
+          start: start,
+          finish: finish
+        }) do
+      DateTime.diff(finish, start, :second)
+    end
+  end
 end
